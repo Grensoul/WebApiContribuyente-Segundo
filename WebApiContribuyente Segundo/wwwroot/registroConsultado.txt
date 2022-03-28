@@ -1,3 +1,9 @@
-Pacheco
-Gustavo
-Vicente
+Nombre consultado: Lorenzo
+Coincidencias: 
+Lorenzo A.
+Lorenzo B.
+Lorenzo C.
+Consulta hecha el 27/03/2022 20:11:01
+Nombre consultado: Vicente
+Coincidencias: 
+Consulta hecha el 27/03/2022 20:21:20

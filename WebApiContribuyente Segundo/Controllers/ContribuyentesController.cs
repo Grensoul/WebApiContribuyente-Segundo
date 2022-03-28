@@ -58,13 +58,25 @@ namespace WebApiContribuyente_Segundo.Controllers
         public async Task<ActionResult<List<GetContribuyenteDTO>>> Get([FromRoute] string nombre)
         {
             var contribuyentes = await dbContext.Contribuyentes.Where(contribuyenteBD => contribuyenteBD.Nombre.Contains(nombre)).ToListAsync();
-            
 
             //nombre del archivo
             string nombreArchivo = "registroConsultado.txt";
 
-            //manda llamar la funcion y pasa los parametros
-            Escribir(nombreArchivo, nombre);
+            string msg = "Nombre consultado: " + nombre;
+            Escribir(nombreArchivo, msg);
+
+            msg = "Coincidencias: ";
+            Escribir(nombreArchivo, msg);
+
+            //manda llamar la funcion y pasa los parametros en un for each
+            foreach (Contribuyente contribuyente in contribuyentes)
+            {
+                Escribir(nombreArchivo, contribuyente.Nombre);
+            }
+
+            msg = "Consulta hecha el " + DateTime.Now.ToString("dd/MM/yyyy HH:mm:ss");
+
+            Escribir(nombreArchivo, msg);
 
 
             return mapper.Map<List<GetContribuyenteDTO>>(contribuyentes);
@@ -93,8 +105,15 @@ namespace WebApiContribuyente_Segundo.Controllers
             //se nombra el archivo
             string nombreArchivo = "nuevosRegistros.txt";
 
+            string msg = "Contribuyente agregado: ";
+            Escribir(nombreArchivo, msg);
+
             //manda llamar la funcion y pasa los parametros
             Escribir(nombreArchivo, contribuyente.Nombre);
+
+            msg = "Registro realizado el " + DateTime.Now.ToString("dd/MM/yyyy HH:mm:ss");
+
+            Escribir(nombreArchivo, msg);
 
             dbContext.Add(contribuyente);
             await dbContext.SaveChangesAsync();
