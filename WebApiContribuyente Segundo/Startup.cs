@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
 using System.Text.Json.Serialization;
 using WebApiContribuyente_Segundo.Filtros;
+using WebApiContribuyente_Segundo.Services;
 
 namespace WebApiContribuyente_Segundo
 {
@@ -28,6 +29,8 @@ namespace WebApiContribuyente_Segundo
             options.UseSqlServer(Configuration.GetConnectionString("defaultConnection")));
 
             services.AddResponseCaching();
+            services.AddHostedService<EscribirEnArchivo>();
+            services.AddHostedService<EscribirAlabanzaAlProfeArchivo>();
 
             services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer();
             services.AddEndpointsApiExplorer();

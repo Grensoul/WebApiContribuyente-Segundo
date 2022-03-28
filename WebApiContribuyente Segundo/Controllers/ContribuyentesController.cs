@@ -12,11 +12,24 @@ namespace WebApiContribuyente_Segundo.Controllers
     {
         private readonly ApplicationDbContext dbContext;
         private readonly IMapper mapper;
+        private readonly IWebHostEnvironment env;
 
-        public ContribuyentesController(ApplicationDbContext context, IMapper mapper)
+        public ContribuyentesController(ApplicationDbContext context, IMapper mapper, IWebHostEnvironment env)
         {
             this.dbContext = context;
             this.mapper = mapper;
+            this.env = env;
+        }
+
+        // Método para escribir en los archivos
+        private void Escribir(string nombreArchivo, string msg)
+        {
+            var ruta = $@"{env.ContentRootPath}\wwwroot\{nombreArchivo}";
+            using (StreamWriter writer = new StreamWriter(ruta, append: true)) 
+            { 
+                writer.WriteLine(msg);
+                writer.Close(); 
+            }
         }
 
         [HttpGet]
@@ -45,6 +58,14 @@ namespace WebApiContribuyente_Segundo.Controllers
         public async Task<ActionResult<List<GetContribuyenteDTO>>> Get([FromRoute] string nombre)
         {
             var contribuyentes = await dbContext.Contribuyentes.Where(contribuyenteBD => contribuyenteBD.Nombre.Contains(nombre)).ToListAsync();
+            
+
+            //nombre del archivo
+            string nombreArchivo = "registroConsultado.txt";
+
+            //manda llamar la funcion y pasa los parametros
+            Escribir(nombreArchivo, nombre);
+
 
             return mapper.Map<List<GetContribuyenteDTO>>(contribuyentes);
 
@@ -68,6 +89,12 @@ namespace WebApiContribuyente_Segundo.Controllers
             //};
 
             var contribuyente = mapper.Map<Contribuyente>(contribuyenteDto);
+
+            //se nombra el archivo
+            string nombreArchivo = "nuevosRegistros.txt";
+
+            //manda llamar la funcion y pasa los parametros
+            Escribir(nombreArchivo, contribuyente.Nombre);
 
             dbContext.Add(contribuyente);
             await dbContext.SaveChangesAsync();
